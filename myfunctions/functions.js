@@ -9,9 +9,7 @@ async function handleAllFunctions({ loanAmount, term }) {
 
     while (continueWhile) {
         currentUser = await loadUser()
-
-        console.log("IDADEEEE", currentUser.dob.age);
-        const isUnderAge = currentUser.dob.age < 30;
+        const isUnderAge = currentUser.dob.age < 28;
 
         if (isUnderAge === true || counter > 50) {
             continueWhile = false
@@ -19,7 +17,7 @@ async function handleAllFunctions({ loanAmount, term }) {
         counter++
     }
 
-    const isCurrentUserUnderAge = currentUser.dob.age > 30;
+    const isCurrentUserUnderAge = currentUser.dob.age > 28;
 
     if (isCurrentUserUnderAge === true) {
         return `Name: ${currentUser.name.first}<br></br>Age: ${currentUser.dob.age}<br></br>Gender: ${currentUser.gender}`;
@@ -27,8 +25,6 @@ async function handleAllFunctions({ loanAmount, term }) {
 
     const requestBody = await createRequestForLoan({ user: currentUser, loanAmount, term });
     const bankResponse = await applyForLoan({ requestBody });
-
-    console.log("requestBody", requestBody);
 
     if (requestBody.loanAmount > 1000 && requestBody.loanAmount < 5000 && requestBody.term > 24 && requestBody.term < 48) {
         return `Your loan of $${bankResponse.json.loanAmount} has been approved. Congrats ${bankResponse.json.firstName}. You have ${bankResponse.json.term} months to pay. Organize yourself and have a good day!!!!`;
@@ -70,14 +66,11 @@ async function createRequestForLoan({ user, loanAmount, term }) {
 
 }
 
-
-
 async function applyForLoan({ requestBody }) {
     const response = await axios.post('https://httpbin.org/anything', requestBody);
     return await response.data;
 
 }
-
 
 module.exports = {
     handleAllFunctions
